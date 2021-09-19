@@ -1,0 +1,63 @@
+@startuml classdiagram
+
+package Step2.api{
+
+    package money{
+        interface Product {
+            price(): double
+        }
+    }
+
+    package food{
+        interface Food100g{
+            calorie100g():double
+        }
+    }
+
+    package Restauration{
+        interface FoodProduct extends Product,Food100g{
+            hasUniquePrice():bool
+        }
+        interface WeightedFoodProduct extends FoodProduct{
+            weight():double
+            calorie():double
+        }
+
+    }
+
+ package burger {
+
+    enum FoodType implements FoodProduct {
+        BEEF, WHITEFISH,BURGER, BARBECUE, BEARNAISE, 
+        DEEPFRIENDONIONS, CHEDDAR,TOMATO
+        + price(): double
+         +calorie100g():double
+         +hasUniquePrice():bool
+    }
+
+    class Ingredient implements WeightedFoodProduct{
+        -weight:double
+        +this(type:FoodType,weight:double)
+        +calorie100g():double
+        +weight():double
+        +calorie():double
+        +price():double
+        +hasUniquePrice():bool
+    }
+    Ingredient *--> "-type" FoodType
+
+
+
+    class Burger implements WeightedFoodProduct {
+            - name: string
+            + this(name: string, items: List<Ingredient>)
+            + weight(): double
+            + price(): double
+            +calorie():double
+            +calorie100g():double
+            +hasUniquePrice():bool
+        }
+        Burger *-> "-items *" Ingredient
+ }
+}
+@enduml

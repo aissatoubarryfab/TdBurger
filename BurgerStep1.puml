@@ -1,0 +1,84 @@
+@startuml classdiagram
+
+package Step1.api {
+
+    interface Product {
+        weight(): double
+        price(): double
+    }
+
+    enum SauceType implements Food100g {
+        BURGER, BARBECUE, BEARNAISE
+    }
+
+    enum MeatType implements Food100g {
+        BEEF, WHITEFISH
+        + price(): double
+        +calorie100g():double
+    }
+
+    class Cheddar implements FoodProduct {
+        - weight: double
+        - BASE_PRICE: double = 4
+        + this(weight: double)
+        + weight(): double
+        + price(): double
+        +kcal100g():double
+    }
+
+    class DeepFriedOnions implements FoodProduct {
+        - weight: double
+        - BASE_PRICE: double = 1.5
+        + this(weight: double)
+        + weight(): double
+        + price(): double
+        +kcal100g():double
+    }
+
+    class Tomato implements FoodProduct {
+        - weight: double
+        - BASE_PRICE: double = 0.5
+        + this(weight: double)
+        + weight(): double
+        + price(): double
+        +kcal100g():double
+    }
+    
+ 
+    class Sauce implements FoodProduct {
+        - weight: double
+        - {static} BASE_PRICE: double = 1
+        + this(type: SauceType, weight: double)
+        + weight(): double
+        + price(): double
+        +kcal100g():double
+    }
+    Sauce *--> "-type" SauceType
+
+    class Meat implements FoodProduct {
+        - weight: double
+        + this(type: MeatType, weight: double)
+        + weight(): double
+        + price(): double
+        +kcal100g():double
+    }
+    Meat *--> "-type" MeatType
+
+    interface Food100g{
+        +calorie100g():double
+    }
+
+ interface FoodProduct extends Product,Food100g{
+    +calorie():double
+ }
+    class Burger implements FoodProduct {
+        - name: string
+        + this(name: string, items: List<FoodProduct>)
+        + weight(): double
+        + price(): double
+        +kcal():double
+        +kcal100g():double
+    }
+    Burger *-> "~items *" FoodProduct
+}
+@enduml
