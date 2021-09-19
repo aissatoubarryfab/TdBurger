@@ -7,11 +7,11 @@ package original.api.general {
     }
 
     enum SauceType {
-        BURGER
+        BURGER, BARBECUE, BEARNAISE
     }
 
     enum MeatType {
-        BEEF
+        BEEF, WHITEFISH
         + price(): double
     }
 
