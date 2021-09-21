@@ -1,0 +1,130 @@
+@startuml classdiagram
+
+package Step5.api{
+ package api{
+    package monetary{
+        interface Product {
+            price(): double
+        }
+    }
+
+    package dietetic{
+        Interface DieteticElement{
+            calorie100g():double
+        }
+       
+    }
+
+    package Restauration{
+
+         interface Food extends DieteticElement,Product{
+            calorie():double
+            weight():double
+        }
+
+    interface ComposedFood extends Food{
+        add(base:Base,weight:double)
+    }
+       
+     class Ingredient implements Food{
+        -weight:double
+        +this(base:Base,weight:double)
+        +calorie100g():double
+        +weight():double
+        +calorie():double
+        +price():double
+        +hasUniquePrice():bool
+    }
+    Ingredient *--> "-Base 1" Base
+
+    abstract class Recipe implements Food,ComposedFood{
+        -name:string
+        +this(name:string,ingredients:List<Ingredient>)
+        +name():string
+        +calorie100g():double
+        +weight():double
+        +calorie():double
+        +price():double
+    }
+     Recipe *-> "-ingredients *" Ingredient
+
+     interface Base extends DieteticElement,Product{
+          hasUniquePrice():bool
+     }
+      
+    }
+
+ package burger {
+
+    enum BurgerMeat extends Base{
+       BEEF,WHITEFISH
+       +calorie100g():double
+       +price():double
+       +hasUniquePrice():bool
+    }
+
+        enum BurgerSauce extends Base{
+       BURGER,BARBECUE,BEARNAISE
+       +calorie100g():double
+       +price():double
+       +hasUniquePrice():bool
+    }
+
+      enum MenuType{
+       MEAT_MENU,FISH_MENU,CHEESE_MENU
+    }
+
+    enum MenuSize{
+       SMALL,MEDIUM,BIG
+       +meatWeight():double
+    }
+
+    enum BurgerIngredient extends Base{
+       CHEDDAR,DEEPFRIEDONIONS,TOMATO
+       +calorie100g():double
+       +price():double
+       +hasUniquePrice():bool
+    }
+
+    class BurgerBuilder{
+        -name:string
+        +this()
+        +order_menu(name:string,type:MenuType):BurgerBuilder
+        +order_personal(name:string,size:MenuSize,meat:BurgerMeat):BurgerBuilder
+        +with_sauce(sauce:BurgerSauce):BurgerBuilder
+        +with_cheddar():BurgerBuilder
+        +with_onions():BurgerBuilder
+        +with_tomato():BurgerBuilder
+        +cook():ComposedFood
+
+    }
+    BurgerBuilder ..> ComposedFood
+    BurgerBuilder ..> MenuSize
+    BurgerBuilder ..>  MenuType 
+    BurgerBuilder ..>  BurgerIngredient
+    BurgerBuilder ..>  BurgerMeat
+    BurgerBuilder ..>  BurgerSauce
+    BurgerBuilder ..>  Burger
+
+    class Burger extends Recipe {
+            + this(name: string)
+        
+        }
+ }
+
+}
+
+package client{
+    class App{
+        main(args:string[*]):void
+    }
+ }
+
+    App ..>  MenuType 
+    App ..>  MenuSize
+    App ..>  BurgerIngredient
+    App ..>  BurgerMeat
+    App ..>  BurgerSauce
+    App ..> Food
+}
+@enduml
